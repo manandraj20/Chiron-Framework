@@ -17,7 +17,29 @@ instruction : assignment
 	    | penCommand
 	    | gotoCommand
 	    | pauseCommand
+		| declaration
+		| struct_definition
 	    ;
+
+struct_definition : STRUCT VAR '{' declaration_list assignment_list '}' ;
+
+declaration_list : (declaration)+ ;
+
+declaration : array_declaration | variable_declaration ;
+
+assignment_list : (assignment)* ;
+
+// value of 'expression` should be known at compile time
+array_declaration : data_type VAR '[' expression ']' ;
+
+variable_declaration : data_type VAR ;
+
+data_type : INT | custom ;
+
+custom : STRUCT VAR ;
+
+INT : 'int' ;
+STRUCT: 'struct' ;
 
 conditional : ifConditional | ifElseConditional ;
 
@@ -29,8 +51,10 @@ loop : 'repeat' value '[' strict_ilist ']' ;
 
 gotoCommand : 'goto' '(' expression ',' expression ')';
 
-assignment : VAR '=' expression
+assignment : (VAR '=' expression) | array_assignment | (member '=' expression) | (array_member '=' expression)
 	   ;
+// raise error when number of values doesnt match the declared array size
+array_assignment : VAR '=' '{' (expression (',' expression)*)? '}' ;
 
 moveCommand : moveOp expression ;
 moveOp : 'forward' | 'backward' | 'left' | 'right' ;
@@ -87,9 +111,15 @@ NOT: '!' ;
 
 value : NUM
       | VAR
+	  | member
+	  | array_member
       ;
 
 NUM  : [0-9]+        ;
+
+member : VAR ('.' VAR)+ ;
+
+array_member : VAR '[' expression ']' ;
 
 VAR  : ':'[a-zA-Z_] [a-zA-Z0-9]* ;
 
