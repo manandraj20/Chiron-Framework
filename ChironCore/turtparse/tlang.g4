@@ -51,10 +51,16 @@ loop : 'repeat' value '[' strict_ilist ']' ;
 
 gotoCommand : 'goto' '(' expression ',' expression ')';
 
-assignment : (VAR '=' expression) | array_assignment | (member '=' expression) | (array_member '=' expression)
+assignment :  varAssignment | arrayAssignment | memberAssignment | arrayMemberAssignment 
 	   ;
+varAssignment : VAR '=' expression ;
+
+memberAssignment : member '=' expression ;
+
+arrayMemberAssignment : array_member '=' expression ;
+
 // raise error when number of values doesnt match the declared array size
-array_assignment : VAR '=' '{' (expression (',' expression)*)? '}' ;
+arrayAssignment : VAR '=' '{' (expression (',' expression)*)? '}' ;
 
 moveCommand : moveOp expression ;
 moveOp : 'forward' | 'backward' | 'left' | 'right' ;

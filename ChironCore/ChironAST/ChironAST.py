@@ -11,8 +11,14 @@ class AST(object):
 class Instruction(AST):
     pass
 
+# --Assignment Classes-----------------------------------------------
+
 
 class AssignmentCommand(Instruction):
+    pass
+
+
+class VarAssignmentCommand(AssignmentCommand):
     def __init__(self, leftvar, rexpr):
         self.lvar = leftvar
         self.rexpr = rexpr
@@ -20,6 +26,67 @@ class AssignmentCommand(Instruction):
     def __str__(self):
         return self.lvar.__str__() + " = " + self.rexpr.__str__()
 
+
+class MemberAssignmentCommand(AssignmentCommand):
+    def __init__(self, member, expr):
+        self.member = member
+        self.expr = expr
+
+    def __str__(self):
+        return self.member.__str__() + " = " + self.expr.__str__()
+
+
+class ArrayMemberAssignmentCommand(AssignmentCommand):
+    def __init__(self, arrayMember, expr):
+        self.arrayMember = arrayMember
+        self.expr = expr
+
+    def __str__(self):
+        return self.arrayMember.__str__() + " = " + self.expr.__str__()
+
+
+class ArrayAssignmentCommand(AssignmentCommand):
+    def __init__(self, arrayVar, expr_list):
+        self.array = arrayVar
+        self.expr_list = expr_list
+
+    def __str__(self):
+        return self.array.__str__() + " = " + self.expr_list.__str__()
+
+
+class CustomCommand(Instruction):
+    def __init__(self, var):
+        self.var = var
+
+    def __str__(self):
+        return "struct " + self.var.__str__()
+
+
+class Data_typeCommand(Instruction):
+    def __init__(self, dtype):
+        self.dtype = dtype
+
+    def __str__(self):
+        return self.dtype.__str__()
+
+
+class Variable_declarationCommand(Instruction):
+    def __init__(self, dtype, var):
+        self.var = var
+        self.dtype = dtype
+
+    def __str__(self):
+        return self.dtype.__str__() + " " + self.var.__str__()
+
+
+class Array_declarationCommand(Instruction):
+    def __init__(self, dtype, var, sizeExpr):
+        self.var = var
+        self.dtype = dtype
+        self.size = sizeExpr
+
+    def __str__(self):
+        return self.dtype.__str__() + " " + self.var.__str__() + "[" + self.size.__str__() + "]"
 
 class ConditionCommand(Instruction):
     def __init__(self, condition):
@@ -217,6 +284,15 @@ class BoolFalse(BoolExpr):
 
 class Value(Expression):
     pass
+
+
+class Array_member(Value):
+    def __init__(self, var, expr):
+        self.var = var
+        self.expr = expr
+
+    def __str__(self):
+        return self.var.__str__() + "[" + self.expr.__str__() + "]"
 
 
 class Num(Value):

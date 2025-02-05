@@ -38,11 +38,15 @@ class astGenPass(tlangVisitor):
         return instrList
 
 
-    def visitAssignment(self, ctx:tlangParser.AssignmentContext):
+    def visitVarAssignment(self, ctx:tlangParser.VarAssignmentContext):
         lval = ChironAST.Var(ctx.VAR().getText())
         rval = self.visit(ctx.expression())
-        return [(ChironAST.AssignmentCommand(lval, rval), 1)]
+        return [(ChironAST.VarAssignmentCommand(lval, rval), 1)]
 
+    def visitArrayMemberAssignment(self, ctx:tlangParser.ArrayMemberAssignmentContext):
+        arrayMember = ChironAST.ArrayMember(ctx.VAR().getText(), self.visit(ctx.expression()))
+        rval = self.visit(ctx.expression(1))
+        return [(ChironAST.ArrayMemberAssignmentCommand(arrayMember, rval), 1)]
 
     def visitIfConditional(self, ctx:tlangParser.IfConditionalContext):
         condObj = ChironAST.ConditionCommand(self.visit(ctx.condition()))

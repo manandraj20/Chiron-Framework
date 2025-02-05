@@ -29,6 +29,46 @@ class tlangVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by tlangParser#struct_definition.
+    def visitStruct_definition(self, ctx:tlangParser.Struct_definitionContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#declaration_list.
+    def visitDeclaration_list(self, ctx:tlangParser.Declaration_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#declaration.
+    def visitDeclaration(self, ctx:tlangParser.DeclarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#assignment_list.
+    def visitAssignment_list(self, ctx:tlangParser.Assignment_listContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#array_declaration.
+    def visitArray_declaration(self, ctx:tlangParser.Array_declarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#variable_declaration.
+    def visitVariable_declaration(self, ctx:tlangParser.Variable_declarationContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#data_type.
+    def visitData_type(self, ctx:tlangParser.Data_typeContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#custom.
+    def visitCustom(self, ctx:tlangParser.CustomContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by tlangParser#conditional.
     def visitConditional(self, ctx:tlangParser.ConditionalContext):
         return self.visitChildren(ctx)
@@ -56,6 +96,26 @@ class tlangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by tlangParser#assignment.
     def visitAssignment(self, ctx:tlangParser.AssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#varAssignment.
+    def visitVarAssignment(self, ctx:tlangParser.VarAssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#memberAssignment.
+    def visitMemberAssignment(self, ctx:tlangParser.MemberAssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#arrayMemberAssignment.
+    def visitArrayMemberAssignment(self, ctx:tlangParser.ArrayMemberAssignmentContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#arrayAssignment.
+    def visitArrayAssignment(self, ctx:tlangParser.ArrayAssignmentContext):
         return self.visitChildren(ctx)
 
 
@@ -136,6 +196,16 @@ class tlangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by tlangParser#value.
     def visitValue(self, ctx:tlangParser.ValueContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#member.
+    def visitMember(self, ctx:tlangParser.MemberContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by tlangParser#array_member.
+    def visitArray_member(self, ctx:tlangParser.Array_memberContext):
         return self.visitChildren(ctx)
 
 
