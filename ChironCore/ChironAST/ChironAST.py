@@ -35,7 +35,6 @@ class MemberAssignmentCommand(AssignmentCommand):
     def __str__(self):
         return self.member.__str__() + " = " + self.expr.__str__()
 
-
 class ArrayMemberAssignmentCommand(AssignmentCommand):
     def __init__(self, arrayMember, expr):
         self.arrayMember = arrayMember
@@ -296,13 +295,13 @@ class Value(Expression):
     pass
 
 
-class Array_member(Value):
-    def __init__(self, var, expr):
+class ArrayMember(Value):
+    def __init__(self, var, index):
         self.var = var
-        self.expr = expr
+        self.idx = index
 
     def __str__(self):
-        return self.var.__str__() + "[" + self.expr.__str__() + "]"
+        return self.var.__str__() + "[" + self.idx.__str__() + "]"
 
 
 class Num(Value):

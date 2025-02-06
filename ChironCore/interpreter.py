@@ -2,11 +2,23 @@
 from ChironAST import ChironAST
 from ChironHooks import Chironhooks
 import turtle
+import re
 
 Release="Chiron v5.3"
 
 def addContext(s):
-    return str(s).strip().replace(":", "self.prg.")
+    s = str(s).strip().replace(":", "self.prg.")
+    array_access_pattern = re.compile(r'self\.prg\.(\w+)\[(.*?)\]')
+    matches = array_access_pattern.findall(s)
+    for var, idx in matches:
+        s = s.replace(f"self.prg.{var}[{idx}]", f"self.prg.{var}.array[{idx}]")
+    return s
+
+class Array:
+    def __init__(self, size, dtype):
+        self.size = size
+        self.dtype = dtype
+        self.array = [None] * size
 
 class Interpreter:
     # Turtle program should not contain variable with names "ir", "pc", "t_screen"
@@ -95,7 +107,7 @@ class ConcreteInterpreter(Interpreter):
 
         self.sanityCheck(self.ir[self.pc])
 
-        if isinstance(stmt, ChironAST.AssignmentCommand):
+        if isinstance(stmt, ChironAST.VarAssignmentCommand):
             ntgt = self.handleAssignment(stmt, tgt)
         elif isinstance(stmt, ChironAST.ConditionCommand):
             ntgt = self.handleCondition(stmt, tgt)
@@ -109,6 +121,10 @@ class ConcreteInterpreter(Interpreter):
             ntgt = self.handleNoOpCommand(stmt, tgt)
         elif isinstance(stmt, ChironAST.VarDeclarationCommand):
             ntgt = self.handleVarDeclaration(stmt, tgt)
+        elif isinstance(stmt, ChironAST.Array_declarationCommand):
+            ntgt = self.handleArrayDeclaration(stmt, tgt)
+        elif isinstance(stmt, ChironAST.ArrayMemberAssignmentCommand):
+            ntgt = self.handleArrayMemberAssignment(stmt, tgt)
         else:
             raise NotImplementedError("Unknown instruction: %s, %s."%(type(stmt), stmt))
 
@@ -140,6 +156,22 @@ class ConcreteInterpreter(Interpreter):
         exec("setattr(self.prg,\"%s\",%s)" % (lhs,rhs))
         return 1
 
+    def handleArrayDeclaration(self, stmt, tgt):
+        print("  Array Declaration")
+        size = addContext(stmt.size)
+        var = str(stmt.var).replace(":","")
+        dtype = stmt.dtype
+        exec("setattr(self.prg,\"%s\",Array(%s,\"%s\"))" % (var, size, dtype))
+        return 1
+    
+    def handleArrayMemberAssignment(self, stmt, tgt):
+        print("  Array Member Assignment")
+        var = str(stmt.arrayMember.var).replace(":","")
+        idx = addContext(stmt.arrayMember.idx)
+        expr = addContext(stmt.expr)
+        exec("self.prg.%s.array[%s] = %s" % (var, idx, expr))
+        return 1
+    
     def handleVarDeclaration(self, stmt, tgt):
         print("  Variable Declaration")
         var = stmt.var
