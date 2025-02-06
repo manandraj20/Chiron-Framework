@@ -107,6 +107,8 @@ class ConcreteInterpreter(Interpreter):
             ntgt = self.handleGotoCommand(stmt, tgt)
         elif isinstance(stmt, ChironAST.NoOpCommand):
             ntgt = self.handleNoOpCommand(stmt, tgt)
+        elif isinstance(stmt, ChironAST.VarDeclarationCommand):
+            ntgt = self.handleVarDeclaration(stmt, tgt)
         else:
             raise NotImplementedError("Unknown instruction: %s, %s."%(type(stmt), stmt))
 
@@ -138,6 +140,12 @@ class ConcreteInterpreter(Interpreter):
         exec("setattr(self.prg,\"%s\",%s)" % (lhs,rhs))
         return 1
 
+    def handleVarDeclaration(self, stmt, tgt):
+        print("  Variable Declaration")
+        var = stmt.var
+        exec("setattr(self.prg,\"%s\",None)" % (var))
+        return 1
+    
     def handleCondition(self, stmt, tgt):
         print("  Branch Instruction")
         condstr = addContext(stmt)

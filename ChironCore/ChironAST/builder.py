@@ -37,7 +37,11 @@ class astGenPass(tlangVisitor):
 
         return instrList
 
-
+    def visitVariable_declaration(self, ctx:tlangParser.Variable_declarationContext):
+        dtype = ChironAST.Data_type(ctx.data_type().getText())
+        var = ChironAST.Var(ctx.VAR().getText())
+        return [(ChironAST.VarDeclarationCommand(dtype, var), 1)]
+    
     def visitVarAssignment(self, ctx:tlangParser.VarAssignmentContext):
         lval = ChironAST.Var(ctx.VAR().getText())
         rval = self.visit(ctx.expression())

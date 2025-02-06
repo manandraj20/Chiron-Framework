@@ -1,6 +1,7 @@
-:y = :x
-if :x <= 42 [
+struct :Test :testvar
+:testvar = :x + 20
+if :testvar <= 30 [
    :y = :y + 40
 ] else [
-   :y = :y + 22
+   :testvar = :x + 22
 ]

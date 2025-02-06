@@ -54,7 +54,7 @@ class ArrayAssignmentCommand(AssignmentCommand):
         return self.array.__str__() + " = " + self.expr_list.__str__()
 
 
-class CustomCommand(Instruction):
+class Custom(Instruction):
     def __init__(self, var):
         self.var = var
 
@@ -62,7 +62,7 @@ class CustomCommand(Instruction):
         return "struct " + self.var.__str__()
 
 
-class Data_typeCommand(Instruction):
+class Data_type(Instruction):
     def __init__(self, dtype):
         self.dtype = dtype
 
@@ -70,7 +70,7 @@ class Data_typeCommand(Instruction):
         return self.dtype.__str__()
 
 
-class Variable_declarationCommand(Instruction):
+class VarDeclarationCommand(Instruction):
     def __init__(self, dtype, var):
         self.var = var
         self.dtype = dtype
@@ -88,6 +88,7 @@ class Array_declarationCommand(Instruction):
     def __str__(self):
         return self.dtype.__str__() + " " + self.var.__str__() + "[" + self.size.__str__() + "]"
 
+
 class ConditionCommand(Instruction):
     def __init__(self, condition):
         self.cond = condition
@@ -96,12 +97,15 @@ class ConditionCommand(Instruction):
         return self.cond.__str__()
 
 # Not Implemented Yet.
+
+
 class AssertCommand(Instruction):
     def __init__(self, condition):
         self.cond = condition
 
     def __str__(self):
         return self.cond.__str__()
+
 
 class MoveCommand(Instruction):
     def __init__(self, motion, expr):
@@ -119,6 +123,7 @@ class PenCommand(Instruction):
     def __str__(self):
         return self.status
 
+
 class GotoCommand(Instruction):
     def __init__(self, x, y):
         self.xcor = x
@@ -127,6 +132,7 @@ class GotoCommand(Instruction):
     def __str__(self):
         return "goto " + str(self.xcor) + " " + str(self.ycor)
 
+
 class NoOpCommand(Instruction):
     def __init__(self):
         pass
@@ -134,12 +140,14 @@ class NoOpCommand(Instruction):
     def __str__(self):
         return "NOP"
 
+
 class PauseCommand(Instruction):
     def __init__(self):
         pass
 
     def __str__(self):
         return "pause"
+
 
 class Expression(AST):
     pass
@@ -189,6 +197,7 @@ class Mult(BinArithOp):
     def __init__(self, lexpr, rexpr):
         super().__init__(lexpr, rexpr, "*")
 
+
 class Div(BinArithOp):
     def __init__(self, lexpr, rexpr):
         super().__init__(lexpr, rexpr, "/")
@@ -213,6 +222,7 @@ class BinCondOp(BoolExpr):
 class AND(BinCondOp):
     def __init__(self, expr1, expr2):
         super().__init__(expr1, expr2, "and")
+
 
 class OR(BinCondOp):
     def __init__(self, expr1, expr2):
