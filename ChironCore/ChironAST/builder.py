@@ -45,6 +45,11 @@ class astGenPass(tlangVisitor):
         rval = self.visit(ctx.expression())
         return [(ChironAST.VarAssignmentCommand(lval, rval), 1)]
 
+    def visitArrayAssignment(self, ctx:tlangParser.ArrayAssignmentContext):
+        lvar = ChironAST.Var(ctx.VAR().getText())
+        exprList = ChironAST.ExpressionList([self.visit(expr) for expr in ctx.expression()])
+        return [(ChironAST.ArrayAssignmentCommand(lvar, exprList), 1)]
+
     def visitArray_declaration(self, ctx: tlangParser.Array_declarationContext):
         dtype = ChironAST.Data_type(ctx.data_type().getText())
         var = ChironAST.Var(ctx.VAR().getText())
@@ -54,9 +59,9 @@ class astGenPass(tlangVisitor):
     def visitArrayMemberAssignment(self, ctx: tlangParser.ArrayMemberAssignmentContext):
         var = ctx.array_member().VAR().getText()
         index = self.visit(ctx.array_member().expression())
-        arrayMember = ChironAST.ArrayMember(var, index)
-        rval = self.visit(ctx.expression())
-        return [(ChironAST.ArrayMemberAssignmentCommand(arrayMember, rval), 1)]
+        lvar = ChironAST.ArrayMember(var, index)
+        rexpr = self.visit(ctx.expression())
+        return [(ChironAST.ArrayMemberAssignmentCommand(lvar, rexpr), 1)]
 
     def visitIfConditional(self, ctx: tlangParser.IfConditionalContext):
         condObj = ChironAST.ConditionCommand(self.visit(ctx.condition()))

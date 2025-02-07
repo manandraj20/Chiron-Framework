@@ -36,21 +36,21 @@ class MemberAssignmentCommand(AssignmentCommand):
         return self.member.__str__() + " = " + self.expr.__str__()
 
 class ArrayMemberAssignmentCommand(AssignmentCommand):
-    def __init__(self, arrayMember, expr):
-        self.arrayMember = arrayMember
-        self.expr = expr
+    def __init__(self, arrayMember, rexpr):
+        self.lvar = arrayMember
+        self.rexpr = rexpr
 
     def __str__(self):
-        return self.arrayMember.__str__() + " = " + self.expr.__str__()
+        return self.lvar.__str__() + " = " + self.rexpr.__str__()
 
 
 class ArrayAssignmentCommand(AssignmentCommand):
-    def __init__(self, arrayVar, expr_list):
-        self.array = arrayVar
-        self.expr_list = expr_list
+    def __init__(self, lvar, expr_list):
+        self.lvar = lvar
+        self.rexpr = expr_list
 
     def __str__(self):
-        return self.array.__str__() + " = " + self.expr_list.__str__()
+        return self.lvar.__str__() + " = " + self.rexpr.__str__()
 
 
 class Custom(Instruction):
@@ -202,6 +202,13 @@ class Div(BinArithOp):
         super().__init__(lexpr, rexpr, "/")
 
 
+class ExpressionList(AST):
+    def __init__(self, expr_list):
+        self.expr_list = expr_list
+
+    def __str__(self):
+        return "[" + ', '.join([str(x) for x in self.expr_list]) + "]"
+    
 # --Boolean Expressions-----------------------------------------------
 
 class BoolExpr(Expression):

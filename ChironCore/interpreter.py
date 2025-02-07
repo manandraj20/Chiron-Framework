@@ -107,7 +107,7 @@ class ConcreteInterpreter(Interpreter):
 
         self.sanityCheck(self.ir[self.pc])
 
-        if isinstance(stmt, ChironAST.VarAssignmentCommand):
+        if isinstance(stmt, ChironAST.AssignmentCommand):
             ntgt = self.handleAssignment(stmt, tgt)
         elif isinstance(stmt, ChironAST.ConditionCommand):
             ntgt = self.handleCondition(stmt, tgt)
@@ -123,8 +123,6 @@ class ConcreteInterpreter(Interpreter):
             ntgt = self.handleVarDeclaration(stmt, tgt)
         elif isinstance(stmt, ChironAST.Array_declarationCommand):
             ntgt = self.handleArrayDeclaration(stmt, tgt)
-        elif isinstance(stmt, ChironAST.ArrayMemberAssignmentCommand):
-            ntgt = self.handleArrayMemberAssignment(stmt, tgt)
         else:
             raise NotImplementedError("Unknown instruction: %s, %s."%(type(stmt), stmt))
 
@@ -151,25 +149,21 @@ class ConcreteInterpreter(Interpreter):
     
     def handleAssignment(self, stmt, tgt):
         print("  Assignment Statement")
-        lhs = str(stmt.lvar).replace(":","")
+        lhs = addContext(stmt.lvar)
         rhs = addContext(stmt.rexpr)
-        exec("setattr(self.prg,\"%s\",%s)" % (lhs,rhs))
+        if rhs.startswith("["):
+            lhs = re.sub(r'self\.prg\.([a-zA-Z_][a-zA-Z0-9]*)', r'self.prg.\1.array', lhs)
+        else:
+            lhs = re.sub(r'self\.prg\.([a-zA-Z_][a-zA-Z0-9]*)', r'self.prg.\1', lhs)
+        exec("%s = %s" % (lhs, rhs))
         return 1
-
+    
     def handleArrayDeclaration(self, stmt, tgt):
         print("  Array Declaration")
         size = addContext(stmt.size)
         var = str(stmt.var).replace(":","")
         dtype = stmt.dtype
         exec("setattr(self.prg,\"%s\",Array(%s,\"%s\"))" % (var, size, dtype))
-        return 1
-    
-    def handleArrayMemberAssignment(self, stmt, tgt):
-        print("  Array Member Assignment")
-        var = str(stmt.arrayMember.var).replace(":","")
-        idx = addContext(stmt.arrayMember.idx)
-        expr = addContext(stmt.expr)
-        exec("self.prg.%s.array[%s] = %s" % (var, idx, expr))
         return 1
     
     def handleVarDeclaration(self, stmt, tgt):
